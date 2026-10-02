@@ -71,35 +71,94 @@ export default function Home() {
     if (!chatInput.trim()) {
       return;
     }
-  
-    const userMessage = chatInput.trim();
 
+    const userMessage = chatInput.trim();
     const lowerMessage = userMessage.toLowerCase();
 
-  let assistantResponse =
-    tasks.filter((task) => !task.completed).length === 0
-      ? "You have no pending tasks."
-      : `You have ${
-          tasks.filter((task) => !task.completed).length
-        } pending task${
-          tasks.filter((task) => !task.completed).length === 1 ? "" : "s"
-        }.`;
-
-  if (
-    lowerMessage.includes("show") ||
-    lowerMessage.includes("list") ||
-    lowerMessage.includes("what tasks")
-  ) {
     const pendingTasks = tasks.filter((task) => !task.completed);
+    const completedTasks = tasks.filter((task) => task.completed);
 
-    assistantResponse =
-      pendingTasks.length === 0
-        ? "You have no pending tasks."
-        : `Your pending tasks are: ${pendingTasks
-            .map((task) => task.title)
-            .join(", ")}.`;
-  }
-  
+    let assistantResponse = "";
+
+    // Count pending tasks
+    if (
+      lowerMessage.includes("how many") ||
+      lowerMessage.includes("number of") ||
+      lowerMessage.includes("pending")
+    ) {
+      assistantResponse =
+        pendingTasks.length === 0
+          ? "You have no pending tasks."
+          : `You have ${pendingTasks.length} pending task${
+              pendingTasks.length === 1 ? "" : "s"
+            }.`;
+    }
+
+    // List pending tasks
+    else if (
+      lowerMessage.includes("show") ||
+      lowerMessage.includes("list") ||
+      lowerMessage.includes("what tasks")
+    ) {
+      assistantResponse =
+        pendingTasks.length === 0
+          ? "You have no pending tasks."
+          : `Your pending tasks are: ${pendingTasks
+              .map((task) => task.title)
+              .join(", ")}.`;
+    }
+
+    // Completed tasks
+    else if (
+      lowerMessage.includes("completed") ||
+      lowerMessage.includes("finished") ||
+      lowerMessage.includes("done")
+    ) {
+      assistantResponse =
+        completedTasks.length === 0
+          ? "You have not completed any tasks yet."
+          : `You have completed ${completedTasks.length} task${
+              completedTasks.length === 1 ? "" : "s"
+            }: ${completedTasks.map((task) => task.title).join(", ")}.`;
+    }
+
+    // High-priority tasks
+    else if (
+      lowerMessage.includes("high priority") ||
+      lowerMessage.includes("important")
+    ) {
+      const highPriorityTasks = pendingTasks.filter(
+        (task) => task.priority === "high"
+      );
+
+      assistantResponse =
+        highPriorityTasks.length === 0
+          ? "You have no pending high-priority tasks."
+          : `Your high-priority tasks are: ${highPriorityTasks
+              .map((task) => task.title)
+              .join(", ")}.`;
+    }
+
+    // Due tomorrow
+    else if (lowerMessage.includes("tomorrow")) {
+      const tomorrowTasks = pendingTasks.filter((task) =>
+        task.deadline.toLowerCase().includes("tomorrow")
+      );
+
+      assistantResponse =
+        tomorrowTasks.length === 0
+          ? "You have no pending tasks due tomorrow."
+          : `Tasks due tomorrow: ${tomorrowTasks
+              .map((task) => task.title)
+              .join(", ")}.`;
+    }
+
+    // Default response
+    else {
+      assistantResponse =
+        "I can help you review your tasks. Try asking about your pending tasks, completed tasks, high-priority tasks, or tasks due tomorrow.";
+    }
+
     setMessages((currentMessages) => [
       ...currentMessages,
       {
@@ -111,7 +170,7 @@ export default function Home() {
         text: assistantResponse,
       },
     ]);
-  
+
     setChatInput("");
   };
 
