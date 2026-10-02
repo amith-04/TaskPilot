@@ -231,7 +231,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gray-100 text-gray-900">
       {/* Header */}
-      <header className="border-b bg-white px-8 py-5 text-gray-900">
+      <header className="border-b bg-white px-4 py-5 text-gray-900 sm:px-8">
         <h1 className="text-2xl font-bold">TaskPilot</h1>
         <p className="text-sm text-gray-500">
           Organize your tasks. Stay on track.
@@ -239,7 +239,7 @@ export default function Home() {
       </header>
 
       {/* Main content */}
-      <div className="grid min-h-[calc(100vh-89px)] grid-cols-2">
+      <div className="grid min-h-[calc(100vh-89px)] grid-cols-1 md:grid-cols-2">
         {/* Tasks */}
         <section className="border-r bg-white p-8 text-gray-900">
           <div className="mb-6 flex items-center justify-between">
@@ -318,15 +318,15 @@ export default function Home() {
         </section>
 
         {/* AI Chat */}
-        <section className="flex flex-col bg-gray-50 text-gray-900">
-          <div className="border-b bg-white p-6">
+        <section className="border-b bg-white p-4 text-gray-900 sm:p-8 md:border-b-0 md:border-r">
+          <div className="border-b bg-white p-4 sm:p-6">
             <h2 className="text-xl font-semibold">AI Chat</h2>
             <p className="text-sm text-gray-500">
               Ask TaskPilot about your tasks.
             </p>
           </div>
 
-          <div className="flex-1 space-y-3 overflow-y-auto p-6">
+          <div className="flex-1 space-y-3 overflow-y-auto p-4 sm:p-6">
             {messages.map((message, index) => (
               <div
                 key={index}
